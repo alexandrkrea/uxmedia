@@ -1,0 +1,12 @@
+/* Порядок важен: токены, база, раскладка, компоненты, страницы */
+@import './00-tokens.css';
+@import './01-base.css';
+@import './10-layout.css';
+@import './20-sidebar-footer.css';
+@import './30-image.css';
+@import './40-cards.css';
+@import './50-pager.css';
+@import './55-scrollbar.css';
+@import './60-search.css';
+@import './70-article.css';
+@import './80-gallery.css';

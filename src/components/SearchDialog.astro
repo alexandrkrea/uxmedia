@@ -1,0 +1,23 @@
+---
+import * as i from '../lib/icons';
+---
+
+<div class="search" id="search" hidden>
+  <div class="search__backdrop" data-close></div>
+  <div class="search__box" role="dialog" aria-modal="true" aria-label="Поиск">
+    <div class="search__bar">
+      <Fragment set:html={i.searchSmall} />
+      <input class="search__input" id="search-input" type="text" placeholder="Поиск по новостям и разделам" autocomplete="off" spellcheck="false" aria-label="Поиск" />
+      <button class="search__kbd" id="search-kbd" type="button">Enter</button>
+      <button class="search__close" type="button" data-close aria-label="Закрыть поиск"><Fragment set:html={i.close} /></button>
+    </div>
+    <div class="search__panel">
+      <div class="search__list" id="search-list" role="listbox" aria-label="Результаты поиска"></div>
+      <div class="search__hints">
+        <span><kbd>esc</kbd> закрыть</span>
+        <span><kbd>↑</kbd><kbd>↓</kbd> выбор</span>
+        <span><kbd>↵</kbd> открыть</span>
+      </div>
+    </div>
+  </div>
+</div>

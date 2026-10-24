@@ -1,0 +1,37 @@
+---
+// Картинка: <picture> с avif и webp (ширина 900, качество 40). Для режима молнии рядом лежат версии с качеством 5
+// (data-lite); на телефоне они выбираются сразу через media, дальше переключением управляет scripts/images.js.
+// thumb — миниатюра 256px без режима молнии (галерея, поиск).
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  priority?: boolean;
+  thumb?: boolean;
+}
+const { src, alt, priority = false, thumb = false } = Astro.props;
+
+const width = thumb ? 256 : 900;
+const make = (format: 'avif' | 'webp', quality: number) => getImage({ src, format, width, quality });
+const [avif, webp] = await Promise.all([make('avif', 40), make('webp', 40)]);
+const [avifLite, webpLite] = thumb ? [null, null] : await Promise.all([make('avif', 5), make('webp', 5)]);
+const loading = priority ? { fetchpriority: 'high', decoding: 'async' } : { loading: 'lazy', decoding: 'async' };
+---
+
+<picture data-fixed={thumb ? '' : undefined}>
+  {avifLite && <source type="image/avif" media="(max-width: 640px)" srcset={avifLite.src} data-mq />}
+  {webpLite && <source type="image/webp" media="(max-width: 640px)" srcset={webpLite.src} data-mq />}
+  <source type="image/avif" srcset={avif.src} data-full={avif.src} data-lite={avifLite?.src} />
+  <source type="image/webp" srcset={webp.src} data-full={webp.src} data-lite={webpLite?.src} />
+  <img
+    src={webp.src}
+    data-full={webp.src}
+    data-lite={webpLite?.src}
+    alt={alt}
+    width={webp.attributes.width}
+    height={webp.attributes.height}
+    {...loading}
+  />
+</picture>

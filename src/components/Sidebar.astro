@@ -1,0 +1,26 @@
+---
+import * as i from '../lib/icons';
+import { SECTIONS } from '../data/site';
+import { href, route } from '../lib/url';
+
+interface Props { active?: string }
+const { active } = Astro.props;
+---
+
+<aside class="sidebar" id="sidebar" aria-label="Разделы сайта">
+  <nav class="nav" aria-label="Разделы">
+    {SECTIONS.map(s => <a href={href(route.section(s.slug))} aria-current={s.slug === active ? 'page' : undefined}>{s.name}</a>)}
+  </nav>
+  <nav class="links" aria-label="О сайте">
+    <a href={href(route.about + '#contacts')}>контакты</a>
+    <a href={href(route.about + '#advertising')}>реклама</a>
+    <a href={href(route.about)}>о проекте</a>
+    <a href={href(route.about + '#suggest')}>предложить новость</a>
+  </nav>
+  <nav class="socials" aria-label="Соцсети">
+    <a href="#"><Fragment set:html={i.telegram} />telegram</a>
+    <a href="#"><Fragment set:html={i.youtube} />youtube</a>
+    <a href="#"><Fragment set:html={i.instagram} />instagram</a>
+    <a href="#"><Fragment set:html={i.tiktok} />tiktok</a>
+  </nav>
+</aside>

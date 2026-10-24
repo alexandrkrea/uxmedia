@@ -1,0 +1,127 @@
+/* ==========================================================================
+   Страницы-статьи: новость, «о проекте», итоги недели
+   ========================================================================== */
+
+.article-col { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.layout--article .aside { display: none; } /* баннер справа показываем там, где для него есть место (от 1600px, см. 10-layout.css) */
+
+.article { --article-pad: 86px; padding: 86px 0 80px; border-radius: 32px; background: var(--surface); }
+.article__inner { padding: 0 var(--article-pad); }
+
+/* ——— Хлебные крошки: весь путь, на всех экранах ——— */
+.crumbs { margin-bottom: 16px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.crumbs ol { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.crumbs li + li::before { content: "/"; margin-right: 8px; color: var(--disabled); }
+.crumbs [aria-current] { color: var(--text-2); }
+@media (hover: hover) { .crumbs a:hover { color: var(--icon-hover); text-decoration: underline; text-underline-position: from-font; } }
+
+/* ——— Строка с тегами и датой ——— */
+.article__meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 32px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.article__meta time { white-space: nowrap; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+@media (hover: hover) { .tags a:hover { color: var(--icon-hover); text-decoration: underline; text-underline-position: from-font; } }
+
+/* ——— Заголовок, лид, подпись автора ——— */
+.article__head h1 { font-weight: 600; font-size: 32px; line-height: 1; letter-spacing: -1px; color: var(--text); }
+.article__lead { margin-top: 16px; font-size: 16px; line-height: 1.5; color: var(--text-2); }
+.byline { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 16px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.byline a { color: var(--text-2); text-decoration: underline; text-underline-position: from-font; }
+
+/* ——— Блок «Коротко» (ответ в начале: удобно людям и нейросетям) ——— */
+.summary { margin-top: 32px; padding: 24px 32px; border-radius: 24px; background: var(--bg); }
+.summary h2 { font-size: 13px; font-weight: 500; line-height: 1.6; color: var(--muted); text-transform: lowercase; }
+.summary ul { margin-top: 8px; }
+.summary li { display: flex; gap: 12px; font-size: 16px; line-height: 1.5; color: var(--text); }
+.summary li + li { margin-top: 8px; }
+.summary li::before { content: "—"; flex: none; color: var(--muted); }
+
+/* ——— Медиа в статье ——— */
+.article__media { margin-top: var(--flow-block); }
+.article__media .ph { width: 100%; aspect-ratio: 900 / 491; }
+.article__media--hero .ph { aspect-ratio: 900 / 506; }
+
+/* ——— Текст: единая шкала отступов (--flow*), боковые поля у всего, кроме «bleed» (картинки и галерея на всю ширину) ——— */
+.article__body { margin-top: var(--flow-section); }
+.article__body > * { margin-inline: var(--article-pad); }
+.article__body > .bleed { margin-inline: 0; }
+
+.prose > * + * { margin-top: var(--flow); }
+.prose > :is(h2, h3) + * { margin-top: var(--flow-head); }
+.prose > .caption + * { margin-top: var(--flow-block); }
+.prose > * + .checks { margin-top: var(--flow-section); }
+.prose > * + :is(ol) { margin-top: var(--flow-head); }
+.prose > * + .article__media { margin-top: var(--flow-block); }
+.prose > * + .gallery { margin-top: var(--flow-section); }
+.prose > .gallery + * { margin-top: 40px; }
+.prose > .article__media + .caption { margin-top: 24px; }
+
+.prose p, .prose li { font-size: 18px; line-height: 1.5; color: var(--text-2); }
+.prose h2 { font-weight: 600; font-size: 24px; line-height: 1.2; color: var(--text); }
+.prose h3 { font-weight: 600; font-size: 20px; line-height: 1.2; color: var(--text); }
+.prose a { color: var(--text); text-decoration: underline; text-underline-position: from-font; }
+.prose .caption { font-size: 13px; line-height: 1.6; color: var(--muted); }
+.prose strong { font-weight: 600; color: var(--text); }
+
+/* списки: маркеры, нумерация и галочки */
+.prose ul { padding-left: 22px; list-style: disc; }
+.prose ul li::marker { color: var(--muted); }
+.prose li + li { margin-top: var(--flow); }
+.prose ol { counter-reset: step; }
+.prose ol > li { display: flex; gap: 16px; counter-increment: step; }
+.prose ol > li::before { content: counter(step) "."; flex: none; }
+.prose ul.digest-list { padding-left: 0; list-style: none; }
+.prose ul.digest-list li + li { margin-top: 16px; }
+.checks ul { padding-left: 0; list-style: none; }
+.checks li { display: flex; gap: 16px; align-items: flex-start; }
+.checks li::before {
+  content: ""; flex: none; width: 24px; height: 24px; background: var(--text-2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ——— Цитата с источником ——— */
+.quote { padding-left: 24px; border-left: 3px solid var(--text); }
+.prose > .quote { margin-top: var(--flow-block); }
+.prose .quote { font-size: 20px; font-weight: 500; line-height: 1.4; color: var(--text); }
+.quote footer { margin-top: 12px; font-size: 13px; font-weight: 400; line-height: 1.6; color: var(--muted); }
+.quote cite { font-style: normal; }
+.prose .quote p { font-size: inherit; font-weight: inherit; line-height: inherit; color: inherit; }
+.prose .quote a { color: var(--text-2); }
+
+/* ——— Теги внизу статьи ——— */
+.prose > .tag-list { margin-top: var(--flow-section); }
+.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 64px;
+  background: var(--bg); font-size: 13px; color: var(--text-2); transition: background .2s, color .2s;
+}
+@media (hover: hover) { .tag:hover { background: var(--item-hover); color: var(--text); outline: 1px solid var(--disabled); } }
+
+.related { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.related-wrap { display: flex; flex-direction: column; gap: 16px; }
+.related-title { font-size: 20px; font-weight: 600; line-height: 1.2; }
+
+/* ——— Итоги недели: список новостей ——— */
+.digest-list a { display: block; }
+.digest-list time { display: block; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.digest-list strong { font-weight: 600; color: var(--text); }
+@media (hover: hover) { .digest-list a:hover strong { text-decoration: underline; } }
+
+@media (max-width: 960px) {
+  .layout--article .article-col { margin: 32px 0; }
+  .article { --article-pad: 40px; }
+  .article__head h1 { font-size: 28px; }
+}
+@media (max-width: 640px) {
+  .layout--article .article-col { margin: 0 0 32px; }
+  .article { margin: 0 -24px; padding: 32px 0 64px; border-radius: 24px; } /* белый фон на всю ширину экрана */
+  .article { --flow-head: 16px; --flow-block: 32px; --flow-section: 40px; }
+  .article { --article-pad: 24px; }
+  .article__head h1 { font-size: 24px; letter-spacing: -.5px; }
+  .summary { padding: 20px 24px; }
+  .prose p, .prose li { font-size: 16px; }
+  .prose .quote { font-size: 18px; }
+  .prose h2 { font-size: 22px; }
+  .prose h3 { font-size: 18px; }
+  .related { grid-template-columns: 1fr; gap: 24px; }
+}

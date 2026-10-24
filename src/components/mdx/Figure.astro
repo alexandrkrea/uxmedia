@@ -1,0 +1,11 @@
+---
+// Картинка на всю ширину статьи с подписью.
+import Pic from '../Pic.astro';
+import { imageByPath } from '../../lib/images';
+
+interface Props { image: string; alt: string; caption?: string }
+const { image, alt, caption } = Astro.props;
+---
+
+<figure class="article__media bleed"><div class="ph"><Pic src={imageByPath(image)} alt={alt} /></div></figure>
+{caption && <p class="caption">{caption}</p>}

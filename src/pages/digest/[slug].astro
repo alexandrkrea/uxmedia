@@ -1,0 +1,93 @@
+---
+// Итоги недели: /digest/2026-43/ — сводка главных материалов за неделю (собирается из новостей).
+import Base from '../../layouts/Base.astro';
+import ArticleShell from '../../components/ArticleShell.astro';
+import SummaryBox from '../../components/SummaryBox.astro';
+import Card from '../../components/Card.astro';
+import Quote from '../../components/mdx/Quote.astro';
+import { SITE, DIGESTS } from '../../data/site';
+import { allNews, promo as getPromo } from '../../lib/news';
+import { href, route, absUrl } from '../../lib/url';
+import { rangeLabel, dateLabel, dateLong, iso, plural, readingMinutes } from '../../lib/format';
+import { graph, organization, breadcrumbs, authorOrg, publisherRef } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return DIGESTS.map(digest => ({ params: { slug: digest.slug }, props: { digest } }));
+}
+const { digest } = Astro.props;
+
+const all = await allNews();
+const promo = await getPromo();
+const items = all.filter(n => n.data.date >= digest.from && n.data.date <= digest.to);
+const week = rangeLabel(digest.from, digest.to);
+const top = ['tesla-roadster-kikflip', 'obzor-samsung-odyssey-oled-g8', '1password-dlya-ii-agentov']
+  .map(slug => all.find(n => n.id === slug)).filter(Boolean) as typeof all;
+const articleUrl = (id: string) => href(route.article(id));
+const count = `${items.length} ${plural(items.length, 'материал', 'материала', 'материалов')}`;
+const lead = `За неделю ${week} мы опубликовали ${count}. Главные темы: Tesla Roadster, OLED-монитор Samsung и защита доступа для ИИ-агентов.`;
+const crumbs = [{ name: 'главная', path: '' }, { name: 'итоги недели' }, { name: week }];
+const published = new Date(digest.to.getTime() - 6 * 3600 * 1000); // воскресенье вечером
+const minutes = readingMinutes(items.map(n => n.data.lead).join(' ') + lead);
+const path = route.digest(digest.slug);
+const articleLd = {
+  '@type': 'Article',
+  '@id': `${absUrl(path)}#article`,
+  headline: `Итоги недели ${week}`,
+  description: lead,
+  datePublished: iso(published),
+  dateModified: iso(published),
+  inLanguage: SITE.lang,
+  mainEntityOfPage: absUrl(path),
+  author: authorOrg(),
+  publisher: publisherRef(),
+};
+---
+
+<Base
+  title={`Итоги недели ${week} — ${SITE.name}`}
+  description={lead}
+  ogType="article"
+  ogMeta={{ 'article:published_time': iso(published) }}
+  layoutClass="layout--article"
+  section="novosti"
+  jsonLd={[graph(organization(), articleLd, breadcrumbs(crumbs))]}
+>
+  <ArticleShell crumbs={crumbs} h1={`Итоги недели ${week}`} lead={lead}>
+    <p slot="byline" class="byline">
+      <span>Автор: <a href={href(SITE.author.path)}>{SITE.author.name}</a></span>
+      <span>Опубликовано: <time datetime={iso(published)}>{dateLong(published)}</time></span>
+      <span>{minutes} мин чтения</span>
+    </p>
+    <SummaryBox
+      slot="summary"
+      items={[
+        'Tesla показала Roadster с «летающей» версией; серию обещают в 2028 году',
+        'Samsung Odyssey OLED G8: 4K, 240 Гц, цена ниже конкурентов',
+        '1Password защищает доступ ИИ-агентов временными ключами',
+      ]}
+    />
+
+    <h2>Главное за неделю</h2>
+    {top.map(n => <p><strong><a href={articleUrl(n.id)}>{n.data.title}</a></strong> — {n.data.lead}</p>)}
+    <Quote source="Tesla в 𝕏" url="https://x.com/Tesla"><p>«Серийное производство нового Roadster мы планируем начать в 2028 году.»</p></Quote>
+
+    <h2>Цифры недели</h2>
+    <ul>
+      <li><strong>{items.length}</strong> {plural(items.length, 'материал', 'материала', 'материалов')} вышло за неделю.</li>
+      <li><strong>2028 год</strong> — срок начала серийного производства Roadster по заявлению Tesla.</li>
+      <li><strong>240 Гц</strong> — частота обновления OLED-монитора Samsung Odyssey G8.</li>
+      <li><strong>8 игроков</strong> — столько поддерживает кооператив нового тактического шутера.</li>
+    </ul>
+
+    <h2>Все материалы недели</h2>
+    <ul class="digest-list">
+      {items.map(n => (
+        <li><a href={articleUrl(n.id)}><time datetime={iso(n.data.date)}>{dateLabel(n.data.date)}</time><strong>{n.data.title}</strong></a></li>
+      ))}
+    </ul>
+  </ArticleShell>
+
+  <aside class="aside" aria-label="Подборка">
+    <Card news={promo} kind="tall" />
+  </aside>
+</Base>

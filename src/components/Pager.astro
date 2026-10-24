@@ -1,0 +1,37 @@
+---
+// Пагинация: настоящие ссылки; scripts/pager.js только улучшает (скелетон, прокрутка, смена без перезагрузки).
+import { href, route } from '../lib/url';
+import { chevronDown } from '../lib/icons';
+
+interface Props { page: number; total: number }
+const { page, total } = Astro.props;
+const link = (n: number) => href(route.newsPage(n));
+
+// окно из 8 номеров вокруг текущей
+const start = Math.max(1, Math.min(page - 2, total - 7));
+const nums = Array.from({ length: Math.min(8, total) }, (_, i) => start + i);
+const all = Array.from({ length: total }, (_, i) => i + 1);
+---
+
+<div class="pager-block">
+  {total > 1 && page < total && <a class="more" href={link(page + 1)} rel="next">показать еще</a>}
+  {total > 1 && (
+    <nav class="pager" aria-label="Страницы">
+      <ol class="pages">
+        {nums.map(n => (
+          <li>
+            <a class:list={['pg', { 'is-current': n === page, 'is-muted': n !== page && n === 1 }]} href={link(n)} aria-current={n === page ? 'page' : undefined}>{n}</a>
+          </li>
+        ))}
+      </ol>
+      <div class="dropdown">
+        <button class="pg pg--total" type="button" aria-haspopup="true" aria-expanded="false" aria-label={`Все страницы, всего ${total}`}>
+          {total} <Fragment set:html={chevronDown} />
+        </button>
+        <div class="dropdown__panel" hidden>
+          {all.map(n => <a class:list={['dropdown__item', { 'is-current': n === page }]} href={link(n)} aria-current={n === page ? 'page' : undefined}>{n}</a>)}
+        </div>
+      </div>
+    </nav>
+  )}
+</div>

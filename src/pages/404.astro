@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { href } from '../lib/url';
+---
+
+<Base title={`Страница не найдена — ${SITE.name}`} description="Такой страницы нет. Вернитесь на главную или воспользуйтесь поиском." noindex section="novosti">
+  <main class="feed" id="content">
+    <section class="intro">
+      <h1>Страница не найдена</h1>
+      <p>Возможно, ссылка устарела или в ней опечатка. Вернитесь <a href={href()}>на главную</a> или воспользуйтесь поиском (Ctrl+K).</p>
+    </section>
+  </main>
+  <aside class="aside"></aside>
+</Base>

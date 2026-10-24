@@ -1,0 +1,77 @@
+/* ==========================================================================
+   Карточки новостей, лента, правая колонка
+   ========================================================================== */
+
+.feed { display: flex; flex-direction: column; gap: 24px; margin: 0 clamp(24px, calc(24px + (100vw - 1025px) * .0314), 32px) 0 clamp(24px, calc(24px + (100vw - 1025px) * .1725), 68px); }
+.aside { display: flex; flex-direction: column; gap: 40px; }
+
+.card { position: relative; overflow: hidden; border-radius: 32px; background: var(--card-bg); }
+.card__link { display: block; }
+.card h2 { font-weight: 600; font-size: 24px; line-height: 1.2; }
+.lead { font-size: 16px; line-height: 1.5; }
+.meta { display: block; font-size: 13px; line-height: 1.6; font-style: normal; }
+
+/* ——— Светлая: фото сверху, текст на белом ——— */
+/* карточка тянется по высоте соседа в сетке: белая часть заполняет остаток, серого фона снизу не видно */
+.card--light { display: flex; flex-direction: column; }
+.card--light .card__link { display: flex; flex: 1; flex-direction: column; }
+.card--light .card__img { flex: none; width: 100%; aspect-ratio: 352 / 220; }
+.card--light .card__body { flex: 1; display: flex; flex-direction: column; gap: 16px; padding: 32px 32px 40px; background: var(--surface); }
+.card--light .lead { color: var(--text-2); }
+.card--light .meta { color: var(--muted); }
+@media (hover: hover) { .card--light:hover h2 { text-decoration: underline; } }
+
+/* ——— Фото на всю карточку: текст поверх, снизу размытие ——— */
+.card--photo { color: #fff; }
+.card__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card--wide { min-height: 495px; }
+.card--wide .ph img { object-position: center; }
+.card__overlay { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 32px; }
+.card__overlay::before {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(34, 43, 47, .16);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 35%, #000 85%);
+  mask-image: linear-gradient(to bottom, transparent 35%, #000 85%);
+}
+.card__text { position: relative; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.card__text .lead { margin-bottom: 8px; color: #e3e6e8; }
+.card__text .meta { color: #c7cdd1; }
+@media (hover: hover) { .card--photo:hover h2 { text-decoration: underline; } }
+
+/* ——— Узкая карточка в правой колонке ——— */
+.card--tall { height: 400px; }
+.card--tall h2 { font-size: 20px; }
+.card--tall .card__text { gap: 16px; }
+
+/* ——— Скелетон карточки (пока грузится следующая страница) ——— */
+.skel-line { display: block; height: 16px; border-radius: 8px; background: var(--card-bg); }
+.card--light .card__body .skel-line + .skel-line { margin-top: -8px; }
+.card--light.is-skeleton .card__body { gap: 12px; }
+.skel-text { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 12px; padding: 32px; }
+.skel-text .skel-line { background: rgba(255, 255, 255, .45); }
+
+/* ——— Вступление: h1 и описание ——— */
+.intro { display: flex; flex-direction: column; gap: 16px; }
+.intro h1 { font-weight: 600; font-size: 32px; line-height: 1; color: var(--text); }
+.intro p { font-size: 16px; line-height: 1.5; color: var(--text-2); }
+
+@media (min-width: 961px) and (max-width: 1100px) {
+  .feed { margin: 0 24px; }
+  .intro h1 { font-size: 28px; }
+}
+
+@media (max-width: 960px) {
+  .feed { margin: 32px 0; }
+  /* на узких экранах h1 с описанием идёт перед лентой, карточка справа после неё */
+  .aside { display: contents; }
+  .intro { order: -1; padding-top: 32px; }
+  .card--tall { height: auto; min-height: 400px; max-width: 360px; width: 100%; }
+}
+@media (max-width: 640px) {
+  .card h2 { font-size: 20px; }
+  .card--wide { min-height: 420px; }
+  .feed { margin: 24px 0 32px; }
+  .intro { padding-top: 0; }
+  .intro h1 { font-size: 24px; }
+}

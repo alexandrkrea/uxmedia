@@ -1,0 +1,17 @@
+---
+// Хлебные крошки: весь путь. path — адрес относительно корня сайта; у последнего пункта ссылки нет.
+import { href } from '../lib/url';
+
+interface Props { items: { name: string; path?: string }[] }
+const { items } = Astro.props;
+---
+
+<nav class="crumbs" aria-label="Хлебные крошки">
+  <ol>
+    {items.map((c, i) => (
+      <li>
+        {i === items.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={href(c.path ?? '')}>{c.name}</a>}
+      </li>
+    ))}
+  </ol>
+</nav>

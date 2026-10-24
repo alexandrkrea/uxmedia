@@ -1,0 +1,13 @@
+---
+// Просмотр фото на весь экран. Лежит рядом со страницей, не внутри неё, чтобы страницу можно было «выключить» через inert.
+import * as i from '../lib/icons';
+---
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фото" hidden>
+  <div class="lightbox__backdrop" data-lb-close></div>
+  <div class="lightbox__stage" id="lightbox-stage"><picture class="lightbox__pic" id="lightbox-pic"></picture></div>
+  <button class="gallery__arrow gallery__arrow--prev" id="lightbox-prev" type="button" aria-label="Предыдущее фото"><Fragment set:html={i.chevronLeft} /></button>
+  <button class="gallery__arrow gallery__arrow--next" id="lightbox-next" type="button" aria-label="Следующее фото"><Fragment set:html={i.chevronRight} /></button>
+  <button class="lightbox__close" data-lb-close type="button" aria-label="Закрыть"><Fragment set:html={i.close} /></button>
+  <div class="lightbox__thumbs" id="lightbox-thumbs"></div>
+</div>

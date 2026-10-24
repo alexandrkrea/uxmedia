@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Токены: шрифт, цвета (светлая и тёмная темы), шкала отступов.
+
+   Брейкпоинты (media-запросы не принимают переменные, поэтому держим в голове):
+     640   телефон
+     960   меню прячется за бургер
+     1100  компактный десктоп (961–1100): уже меню и правая колонка
+     1600  широкие экраны: шапка и меню у краёв, контент по центру
+     2200  совсем широкие: лента в два ряда
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Roboto Flex';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(../assets/fonts/roboto-flex-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Roboto Flex';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(../assets/fonts/roboto-flex-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light;
+
+  /* поверхности */
+  --bg: #e6e7e8;
+  --surface: #fff;
+  --card-bg: #cdcfd1;
+  --item-hover: #f1f2f3;
+
+  /* текст */
+  --text: #222b2f;
+  --text-2: #334147;
+  --muted: #5f6d73;      /* тёмнее прежнего #869298: контраст с фоном 4.5:1 и выше */
+  --disabled: #b2babd;
+
+  /* акцентные кнопки */
+  --dark: #222b2f;
+  --on-dark: #fff;
+
+  /* иконки */
+  --icon: #7d8a90;       /* тёмнее прежнего #b2babd: заметны на светлом фоне */
+  --icon-hover: #222b2f;
+
+  /* фокус с клавиатуры */
+  --focus: #1a73e8;
+
+  /* вертикальные отступы в тексте статьи */
+  --flow: 16px;          /* между абзацами и пунктами списка */
+  --flow-head: 24px;     /* после заголовка */
+  --flow-block: 48px;    /* после подписи, перед картинкой */
+  --flow-section: 64px;  /* между крупными блоками */
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #14191b;
+  --surface: #222b2f;
+  --card-bg: #2c363b;
+  --item-hover: #2c363b;
+
+  --text: #f1f3f4;
+  --text-2: #c7cdd1;
+  --muted: #98a4a9;
+  --disabled: #55626a;
+
+  --dark: #f1f3f4;
+  --on-dark: #14191b;
+
+  --icon: #869298;
+  --icon-hover: #fff;
+
+  --focus: #8ab4f8;
+}

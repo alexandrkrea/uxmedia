@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Своя полоса прокрутки в выпадающих списках: ползунок 4px с полностью скруглёнными концами, без стрелок.
+   В новых Chrome/Edge стандартные scrollbar-width/color отключают ::-webkit-scrollbar,
+   поэтому стандартные свойства применяем только там, где ::-webkit-scrollbar не поддерживается (Firefox).
+   ========================================================================== */
+
+:is(.dropdown__panel, .search__list)::-webkit-scrollbar { width: 10px; }
+:is(.dropdown__panel, .search__list)::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+:is(.dropdown__panel, .search__list)::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
+:is(.dropdown__panel, .search__list)::-webkit-scrollbar-thumb {
+  background: var(--disabled); background-clip: content-box; border: 3px solid transparent; border-radius: 5px;
+}
+:is(.dropdown__panel, .search__list)::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: content-box; }
+
+@supports not selector(::-webkit-scrollbar) {
+  .dropdown__panel, .search__list { scrollbar-width: thin; scrollbar-color: var(--disabled) transparent; }
+}

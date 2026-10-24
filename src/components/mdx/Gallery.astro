@@ -1,0 +1,40 @@
+---
+// Галерея: большое фото, стрелки, счётчик, миниатюры, подпись. Просмотр на весь экран — scripts/gallery.js.
+import { getImage } from 'astro:assets';
+import Pic from '../Pic.astro';
+import * as i from '../../lib/icons';
+import { imageByPath } from '../../lib/images';
+
+interface Slide { image: string; alt: string; caption?: string }
+interface Props { slides: Slide[] }
+const { slides } = Astro.props;
+
+// Адреса всех версий каждого кадра передаём скрипту: он переключает качество и показывает просмотр
+const data = await Promise.all(slides.map(async s => {
+  const src = imageByPath(s.image);
+  const make = (format: 'avif' | 'webp', quality: number, width: number) => getImage({ src, format, width, quality }).then(r => r.src);
+  const [avif, webp, avifLite, webpLite, thumbAvif, thumbWebp] = await Promise.all([
+    make('avif', 40, 900), make('webp', 40, 900), make('avif', 5, 900), make('webp', 5, 900), make('avif', 40, 256), make('webp', 40, 256),
+  ]);
+  return { alt: s.alt, caption: s.caption ?? '', avif, webp, avifLite, webpLite, thumbAvif, thumbWebp };
+}));
+---
+
+<section class="gallery bleed" id="gallery" aria-label="Фотогалерея">
+  <div class="gallery__stage">
+    <div class="ph" id="gallery-main"><Pic src={imageByPath(slides[0].image)} alt={slides[0].alt} /></div>
+    <span class="gallery__count" id="gallery-count" aria-live="polite">1 / {slides.length}</span>
+    <button class="gallery__arrow gallery__arrow--prev" id="gallery-prev" type="button" aria-label="Предыдущее фото"><Fragment set:html={i.chevronLeft} /></button>
+    <button class="gallery__arrow gallery__arrow--next" id="gallery-next" type="button" aria-label="Следующее фото"><Fragment set:html={i.chevronRight} /></button>
+    <button class="gallery__max" id="gallery-max" type="button" aria-label="Открыть на весь экран"><Fragment set:html={i.maximize} /></button>
+  </div>
+  <div class="gallery__thumbs" id="gallery-thumbs">
+    {slides.map((s, n) => (
+      <button class:list={['gallery__thumb', { 'is-active': n === 0 }]} type="button" data-i={n} aria-label={`Фото ${n + 1}: ${s.alt}`} aria-current={n === 0 ? 'true' : undefined}>
+        <span class="ph"><Pic src={imageByPath(s.image)} alt={s.alt} thumb /></span>
+      </button>
+    ))}
+  </div>
+  <p class="gallery__caption" id="gallery-caption">{slides[0].caption}</p>
+  <script type="application/json" id="gallery-data" set:html={JSON.stringify(data).replace(/</g, '\\u003c')} />
+</section>

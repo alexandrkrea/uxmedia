@@ -1,0 +1,18 @@
+---
+import * as i from '../lib/icons';
+import { SITE } from '../data/site';
+import { href } from '../lib/url';
+---
+
+<header class="header">
+  <a href={href()} class="logo" aria-label={`${SITE.name} — на главную`}><Fragment set:html={i.logo} /></a>
+  <div class="tools">
+    <button class="icon-btn" id="search-btn" type="button" aria-label="Поиск"><Fragment set:html={i.search} /></button>
+    <div class="tool">
+      <button class="icon-btn" id="lite-btn" type="button" aria-label="Экономия трафика" aria-pressed="false" aria-describedby="lite-tip"><Fragment set:html={i.zap} /></button>
+      <span class="tip" id="lite-tip" role="tooltip">Экономия трафика выключена: картинки в обычном качестве</span>
+    </div>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Сменить тему"><Fragment set:html={i.moon} /></button>
+    <button class="icon-btn" id="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="sidebar"><Fragment set:html={i.menu} /></button>
+  </div>
+</header>

@@ -1,0 +1,32 @@
+---
+// Белая карточка-статья: крошки, теги и дата, заголовок, лид, подпись, «Коротко», содержимое.
+// Используют новость, «О проекте» и итоги недели.
+import Crumbs from './Crumbs.astro';
+
+interface Props {
+  crumbs: { name: string; path?: string }[];
+  h1: string;
+  lead: string;
+}
+const { crumbs, h1, lead } = Astro.props;
+---
+
+<main class="article-col" id="content">
+  <article class="article">
+    <div class="article__inner">
+      <Crumbs items={crumbs} />
+      <slot name="meta" />
+      <header class="article__head">
+        <h1>{h1}</h1>
+        <p class="article__lead">{lead}</p>
+        <slot name="byline" />
+      </header>
+      <slot name="summary" />
+    </div>
+    <slot name="hero" />
+    <div class="article__body prose">
+      <slot />
+    </div>
+  </article>
+  <slot name="after" />
+</main>

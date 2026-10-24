@@ -1,0 +1,11 @@
+---
+// Лента карточек. Раскладка: светлая, две широкие, светлая, две широкие, светлая, широкая.
+import Card from './Card.astro';
+import type { News } from '../lib/news';
+
+interface Props { items: News[] }
+const { items } = Astro.props;
+const KINDS = ['light', 'wide', 'wide', 'light', 'wide', 'wide', 'light', 'wide'] as const;
+---
+
+{items.map((n, i) => <Card news={n} kind={KINDS[i % KINDS.length]} priority={i === 0} />)}

@@ -1,0 +1,23 @@
+---
+// Страница тега: /tag/tesla/
+import ListPage from '../../layouts/ListPage.astro';
+import { allNews, allTags, byTag } from '../../lib/news';
+import { SITE } from '../../data/site';
+
+export async function getStaticPaths() {
+  const tags = await allTags();
+  return tags.map(tag => ({ params: { tag: tag.id }, props: { tag } }));
+}
+const { tag } = Astro.props;
+const items = byTag(await allNews(), tag.id);
+const name = tag.data.name;
+---
+
+<ListPage
+  title={`${name}: новости и обзоры — ${SITE.name}`}
+  description={`${tag.data.desc} Материалов по теме: ${items.length}.`}
+  h1={`${name} — новости и обзоры`}
+  intro={tag.data.desc}
+  crumbs={[{ name: 'главная', path: '' }, { name }]}
+  items={items}
+/>

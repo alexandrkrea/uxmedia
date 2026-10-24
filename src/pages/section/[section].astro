@@ -1,0 +1,24 @@
+---
+// Раздел меню: /section/avto/ (раздел «новости» — это главная)
+import ListPage from '../../layouts/ListPage.astro';
+import { allNews, bySection } from '../../lib/news';
+import { SECTIONS, SITE } from '../../data/site';
+
+export function getStaticPaths() {
+  return SECTIONS.filter(s => s.slug !== 'novosti').map(section => ({ params: { section: section.slug }, props: { section } }));
+}
+const { section } = Astro.props;
+const items = bySection(await allNews(), section.name);
+const title = section.name[0].toUpperCase() + section.name.slice(1);
+---
+
+<ListPage
+  title={`${title}: новости и обзоры — ${SITE.name}`}
+  description={`Материалы раздела «${section.name}» на ${SITE.name}.`}
+  h1={`${title} — новости и обзоры`}
+  intro={`Материалы раздела «${section.name}» на ${SITE.name}.`}
+  crumbs={[{ name: 'главная', path: '' }, { name: section.name }]}
+  items={items}
+  section={section.slug}
+  noindex={items.length === 0}
+/>

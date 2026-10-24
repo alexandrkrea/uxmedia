@@ -1,0 +1,115 @@
+---
+// Страница новости: /news/<slug>/
+import { render, getEntries } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ArticleShell from '../../components/ArticleShell.astro';
+import SummaryBox from '../../components/SummaryBox.astro';
+import TagList from '../../components/TagList.astro';
+import Card from '../../components/Card.astro';
+import Pic from '../../components/Pic.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import Gallery from '../../components/mdx/Gallery.astro';
+import Figure from '../../components/mdx/Figure.astro';
+import Quote from '../../components/mdx/Quote.astro';
+import Checks from '../../components/mdx/Checks.astro';
+import { SITE } from '../../data/site';
+import { allNews, promo as getPromo, related, sectionSlug } from '../../lib/news';
+import { href, route, absUrl } from '../../lib/url';
+import { dateLabel, iso, readingMinutes } from '../../lib/format';
+import { graph, organization, breadcrumbs, authorOrg, publisherRef } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  return (await allNews()).map(entry => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const d = entry.data;
+
+const all = await allNews();
+const promo = await getPromo();
+const { Content } = await render(entry);
+const tags = (await getEntries(d.tags)).map(t => ({ id: t.id, name: t.data.name }));
+const rel = related(all, entry);
+const hasGallery = (entry.body ?? '').includes('<Gallery');
+const minutes = readingMinutes(entry.body ?? '');
+
+const short = d.title.length > 60 ? d.title.slice(0, 57) + '…' : d.title;
+const crumbs = [
+  { name: 'главная', path: '' },
+  { name: d.section, path: route.section(sectionSlug(d.section)) },
+  { name: short },
+];
+
+// картинки: для соцсетей (1200×630) и для разметки статьи
+const og = await getImage({ src: d.image, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 78 });
+const ogImage = new URL(og.src, Astro.site).href;
+const article = {
+  '@type': 'NewsArticle',
+  '@id': `${absUrl(route.article(entry.id))}#article`,
+  headline: d.title,
+  description: d.lead,
+  image: [{ '@type': 'ImageObject', url: ogImage, width: 1200, height: 630 }],
+  datePublished: iso(d.date),
+  dateModified: iso(d.updated ?? d.date),
+  author: authorOrg(),
+  publisher: publisherRef(),
+  mainEntityOfPage: absUrl(route.article(entry.id)),
+  inLanguage: SITE.lang,
+  articleSection: d.section,
+  keywords: tags.map(t => t.name).join(', '),
+  isAccessibleForFree: true,
+};
+const ogMeta = {
+  'article:published_time': iso(d.date),
+  'article:modified_time': iso(d.updated ?? d.date),
+  'article:section': d.section,
+  'article:tag': tags.map(t => t.name),
+};
+---
+
+<Base
+  title={`${d.title} — ${SITE.name}`}
+  description={d.lead}
+  ogType="article"
+  ogImage={ogImage}
+  ogMeta={ogMeta}
+  layoutClass="layout--article"
+  section={sectionSlug(d.section)}
+  jsonLd={[graph(organization(), article, breadcrumbs(crumbs))]}
+>
+  <ArticleShell crumbs={crumbs} h1={d.title} lead={d.lead}>
+    <div slot="meta" class="article__meta">
+      <div class="tags">{tags.map(t => <a href={href(route.tag(t.id))}>{t.name}</a>)}</div>
+      <time datetime={iso(d.date)}>{dateLabel(d.date)}</time>
+    </div>
+
+    <p slot="byline" class="byline">
+      <span>Автор: <a href={href(SITE.author.path)}>{SITE.author.name}</a></span>
+      <span>Опубликовано: <time datetime={iso(d.date)}>{dateLabel(d.date)}</time></span>
+      {d.updated && <span>Обновлено: <time datetime={iso(d.updated)}>{dateLabel(d.updated)}</time></span>}
+      <span>{minutes} мин чтения</span>
+    </p>
+
+    <SummaryBox slot="summary" items={d.summary} />
+
+    <figure slot="hero" class="article__media article__media--hero bleed">
+      <div class="ph"><Pic src={d.image} alt={d.title} priority /></div>
+    </figure>
+
+    <Content components={{ Gallery, Figure, Quote, Checks }} />
+    <TagList tags={tags} />
+
+    {rel.length > 0 && (
+      <section slot="after" class="related-wrap" aria-label="Читайте также">
+        <h2 class="related-title">Читайте также</h2>
+        <div class="related">{rel.map(m => <Card news={m} kind="light" />)}</div>
+      </section>
+    )}
+  </ArticleShell>
+
+  <aside class="aside" aria-label="Подборка">
+    <Card news={promo} kind="tall" />
+  </aside>
+
+  {hasGallery && <Lightbox slot="after" />}
+</Base>

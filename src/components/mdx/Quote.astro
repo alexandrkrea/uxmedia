@@ -1,0 +1,10 @@
+---
+// Цитата с источником: <Quote source="Tesla в 𝕏" url="https://...">«Текст»</Quote>
+interface Props { source: string; url?: string }
+const { source, url } = Astro.props;
+---
+
+<blockquote class="quote">
+  <slot />
+  <footer>— {source}{url && <> · <cite><a href={url} rel="nofollow noopener">источник: {source}</a></cite></>}</footer>
+</blockquote>

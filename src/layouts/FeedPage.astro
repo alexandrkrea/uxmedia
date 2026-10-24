@@ -1,0 +1,52 @@
+---
+// Главная (страница 1) и архив новостей (/news/page/N/): лента 8 карточек, пагинация, справа вступление и узкая карточка.
+import Base from './Base.astro';
+import Cards from '../components/Cards.astro';
+import Card from '../components/Card.astro';
+import Pager from '../components/Pager.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { SITE, PER_PAGE } from '../data/site';
+import { feed, promo as getPromo, totalPages } from '../lib/news';
+import { route, absUrl } from '../lib/url';
+import { graph, website, organization, breadcrumbs } from '../lib/seo';
+
+interface Props { page: number }
+const { page } = Astro.props;
+
+const all = await feed();
+const total = totalPages(all);
+const items = all.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+const promo = await getPromo();
+const crumbs = [{ name: 'главная', path: '' }, { name: `страница ${page}` }];
+
+const list = {
+  '@type': 'ItemList',
+  itemListElement: items.map((n, i) => ({ '@type': 'ListItem', position: (page - 1) * PER_PAGE + i + 1, url: absUrl(route.article(n.id)) })),
+};
+const title = page === 1 ? SITE.title : `Новости, страница ${page} — ${SITE.name}`;
+const description = page === 1 ? SITE.description : `Архив новостей ${SITE.name}: страница ${page} из ${total}.`;
+---
+
+<Base title={title} description={description} section="novosti" jsonLd={[graph(website(), organization(), list, ...(page > 1 ? [breadcrumbs(crumbs)] : []))]}>
+  <main class="feed" id="content">
+    <Cards items={items} />
+    <Pager page={page} total={total} />
+  </main>
+
+  <aside class="aside" aria-label="О сайте">
+    {page === 1 ? (
+      <section class="intro">
+        <h1>{SITE.title}</h1>
+        <p>{SITE.description}</p>
+        <p>Тестируем гаджеты, следим за релизами и рассказываем, что стоит вашего внимания, а что можно спокойно пропустить. Каждый день — только то, что действительно важно.</p>
+      </section>
+    ) : (
+      <section class="intro">
+        <Crumbs items={crumbs} />
+        <h1>Все новости — страница {page}</h1>
+        <p>Архив новостей {SITE.name}: материалы, вышедшие раньше. Самые свежие — на главной.</p>
+      </section>
+    )}
+    <Card news={promo} kind="tall" />
+  </aside>
+</Base>

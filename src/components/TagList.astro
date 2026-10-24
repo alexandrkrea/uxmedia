@@ -1,0 +1,10 @@
+---
+import { href, route } from '../lib/url';
+
+interface Props { tags: { id: string; name: string }[] }
+const { tags } = Astro.props;
+---
+
+<div class="tag-list">
+  {tags.map(t => <a class="tag" href={href(route.tag(t.id))}>{t.name}</a>)}
+</div>

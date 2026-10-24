@@ -1,0 +1,51 @@
+/* ==========================================================================
+   База: сброс, типографика, фокус, доступность
+   ========================================================================== */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* место под полосу прокрутки резервируется всегда: фон не прыгает, когда прокрутку блокирует поиск или меню */
+html { scrollbar-gutter: stable; }
+
+body {
+  min-width: 320px; /* уже 320px макет не сжимается, появляется горизонтальная прокрутка */
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Roboto Flex", system-ui, sans-serif;
+  font-size: 16px;
+  transition: background .2s;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+img { display: block; }
+ul, ol { list-style: none; }
+
+/* Фокус с клавиатуры: виден только при навигации Tab, мышью не мешает */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.icon-btn:focus-visible, .to-top:focus-visible, .gallery__arrow:focus-visible, .search__close:focus-visible { border-radius: 50%; }
+.pg:focus-visible, .more:focus-visible, .cookie:focus-visible, .dropdown__item:focus-visible { border-radius: 64px; }
+.more:focus-visible { border-radius: 32px; }
+.search__input:focus-visible { outline: none; } /* поле поиска и так в рамке окна */
+.search__item:focus-visible, .search__kbd:focus-visible { outline-offset: -2px; }
+
+/* Скрыто визуально, но доступно скринридерам */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Ссылка «Перейти к содержимому» для клавиатуры */
+.skip-link {
+  position: fixed; left: 16px; top: 8px; z-index: 200; padding: 8px 16px; border-radius: 64px;
+  background: var(--dark); color: var(--on-dark); transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,40 @@
+---
+// Список материалов с вступлением справа: страница тега или раздела.
+import Base from './Base.astro';
+import Cards from '../components/Cards.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { plural } from '../lib/format';
+import { graph, website, organization, breadcrumbs } from '../lib/seo';
+import { SITE } from '../data/site';
+import type { News } from '../lib/news';
+
+interface Props {
+  title: string;
+  description: string;
+  h1: string;
+  intro: string;
+  crumbs: { name: string; path?: string }[];
+  items: News[];
+  section?: string;
+  noindex?: boolean;
+}
+const { title, description, h1, intro, crumbs, items, section = 'novosti', noindex = false } = Astro.props;
+const count = items.length
+  ? `${items.length} ${plural(items.length, 'материал', 'материала', 'материалов')} по теме.`
+  : 'Пока здесь пусто — скоро появятся материалы.';
+---
+
+<Base title={title} description={description} section={section} noindex={noindex} jsonLd={[graph(website(), organization(), breadcrumbs(crumbs))]}>
+  <main class="feed" id="content">
+    <Cards items={items} />
+  </main>
+
+  <aside class="aside" aria-label="О теме">
+    <section class="intro">
+      <Crumbs items={crumbs} />
+      <h1>{h1}</h1>
+      <p>{intro}</p>
+      <p>{count}</p>
+    </section>
+  </aside>
+</Base>

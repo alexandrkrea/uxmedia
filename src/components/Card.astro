@@ -1,0 +1,42 @@
+---
+// Карточка новости: light (фото сверху), wide (фото на всю карточку), tall (узкая справа, без описания).
+import Pic from './Pic.astro';
+import { href, route } from '../lib/url';
+import { dateLabel, iso } from '../lib/format';
+import type { News } from '../lib/news';
+
+interface Props {
+  news: News;
+  kind?: 'light' | 'wide' | 'tall';
+  priority?: boolean;
+}
+const { news, kind = 'light', priority = false } = Astro.props;
+const { title, lead, date, image } = news.data;
+const url = href(route.article(news.id));
+---
+
+{kind === 'light' && (
+  <article class="card card--light">
+    <a href={url} class="card__link">
+      <div class="ph card__img"><Pic src={image} alt={title} priority={priority} /></div>
+      <div class="card__body">
+        <h2>{title}</h2>
+        <p class="lead">{lead}</p>
+        <time class="meta" datetime={iso(date)}>{dateLabel(date)}</time>
+      </div>
+    </a>
+  </article>
+)}
+
+{kind !== 'light' && (
+  <article class:list={['card', 'card--photo', kind === 'tall' ? 'card--tall' : 'card--wide']}>
+    <div class="ph card__bg"><Pic src={image} alt={title} priority={priority} /></div>
+    <a href={url} class="card__link card__overlay">
+      <div class="card__text">
+        <h2>{title}</h2>
+        {kind === 'wide' && <p class="lead">{lead}</p>}
+        <time class="meta" datetime={iso(date)}>{dateLabel(date)}</time>
+      </div>
+    </a>
+  </article>
+)}

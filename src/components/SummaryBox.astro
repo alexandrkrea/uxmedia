@@ -1,0 +1,10 @@
+---
+// Блок «Коротко»: ответ в начале материала (удобно людям и нейросетям).
+interface Props { items: string[]; title?: string }
+const { items, title = 'Коротко' } = Astro.props;
+---
+
+<aside class="summary" aria-label={title}>
+  <h2>{title}</h2>
+  <ul>{items.map(t => <li>{t}</li>)}</ul>
+</aside>

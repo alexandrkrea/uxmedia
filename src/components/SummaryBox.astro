@@ -1,7 +1,7 @@
 ---
-// Блок «Коротко»: ответ в начале материала (удобно людям и нейросетям).
+// Блок «Коротко и по делу»: ответ сразу под обложкой (удобно людям и нейросетям).
 interface Props { items: string[]; title?: string }
-const { items, title = 'Коротко' } = Astro.props;
+const { items, title = 'Коротко и по делу' } = Astro.props;
 ---
 
 <aside class="summary" aria-label={title}>

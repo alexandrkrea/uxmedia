@@ -23,8 +23,8 @@
 .byline__info { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 .byline a { color: var(--text-2); text-decoration: underline; text-underline-position: from-font; }
 
-/* ——— Блок «Коротко» (ответ в начале: удобно людям и нейросетям) ——— */
-.summary { margin-top: 32px; padding: 24px 32px; border-radius: 16px; background: var(--bg); }
+/* ——— Блок «Коротко и по делу» (ответ под обложкой: удобно людям и нейросетям) ——— */
+.article__summary { margin: var(--flow-block) var(--article-pad) 0; }
 .summary h2 { font-size: 13px; font-weight: 500; line-height: 1.6; color: var(--muted); text-transform: lowercase; }
 .summary ul { margin-top: 8px; }
 .summary li { display: flex; gap: 16px; align-items: flex-start; font-size: 18px; line-height: 1.5; color: var(--text); }
@@ -93,7 +93,11 @@
   display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 64px;
   border: 1px solid var(--bg); font-size: 13px; color: var(--text-2); text-decoration: none; transition: border-color .2s, color .2s;
 }
-@media (hover: hover) { .prose .tag:hover { border-color: var(--disabled); color: var(--text); } }
+[data-theme="dark"] .prose .tag { border-color: var(--disabled); }
+@media (hover: hover) {
+  .prose .tag:hover { border-color: var(--disabled); color: var(--text); }
+  [data-theme="dark"] .prose .tag:hover { border-color: var(--icon); }
+}
 
 .related { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
 .related-wrap { display: flex; flex-direction: column; gap: 16px; }
@@ -115,8 +119,10 @@
   .article { margin: 0 -24px; padding: 32px 0 64px; border-radius: 24px; } /* белый фон на всю ширину экрана */
   .article { --flow-head: 16px; --flow-block: 32px; --flow-section: 40px; }
   .article { --article-pad: 24px; }
+  .byline { flex-wrap: nowrap; align-items: flex-start; }
+  .byline__info { flex-direction: column; gap: 0; }
+  .byline__author { text-align: right; }
   .article__head h1 { font-size: 24px; letter-spacing: -.5px; }
-  .summary { padding: 20px 24px; }
   .summary li { font-size: 16px; }
   .prose p, .prose li { font-size: 16px; }
   .prose .quote { font-size: 18px; }

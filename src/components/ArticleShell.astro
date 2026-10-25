@@ -1,5 +1,5 @@
 ---
-// Белая карточка-статья: крошки, подпись (автор, даты), заголовок, лид, «Коротко», содержимое.
+// Белая карточка-статья: крошки, подпись (автор, даты), заголовок, лид, обложка, «Коротко и по делу», содержимое.
 // Используют новость, «О проекте» и итоги недели.
 import Crumbs from './Crumbs.astro';
 
@@ -20,9 +20,9 @@ const { crumbs, h1, lead } = Astro.props;
         <h1>{h1}</h1>
         <p class="article__lead">{lead}</p>
       </header>
-      <slot name="summary" />
     </div>
     <slot name="hero" />
+    {Astro.slots.has('summary') && <div class="article__summary"><slot name="summary" /></div>}
     <div class="article__body prose">
       <slot />
     </div>

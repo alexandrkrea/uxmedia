@@ -50,8 +50,8 @@ export default config({
           validation: { isRequired: true },
         }),
         summary: fields.array(fields.text({ label: 'Пункт' }), {
-          label: 'Коротко',
-          description: '3 коротких пункта: суть материала. Показываются в начале статьи.',
+          label: 'Коротко и по делу',
+          description: '3 коротких пункта: суть материала. Показываются под обложкой.',
           itemLabel: props => props.value || 'Пункт',
           validation: { length: { min: 1, max: 5 } },
         }),

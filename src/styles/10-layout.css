@@ -63,13 +63,15 @@
   .layout--article .aside { display: block; grid-column: 3; justify-self: start; align-self: start; width: 300px; margin-left: 32px; position: sticky; top: 24px; }
 }
 
-/* Совсем широкие: центральная лента в два ряда */
+/* Совсем широкие (от 2200px): центральная лента в два ряда. ОТКЛЮЧЕНО на время проверки: на 2560 остаётся одна колонка, как на 1600.
+   Чтобы вернуть, раскомментировать блок.
 @media (min-width: 2200px) {
   .layout:not(.layout--article) { grid-template-columns: minmax(200px, 1fr) 1224px minmax(332px, 1fr); }
   .layout .feed { margin: 0; display: grid; grid-template-columns: repeat(2, 600px); gap: 24px; align-items: stretch; }
   .layout:not(.layout--article) .aside { margin-left: 32px; width: 300px; justify-self: start; }
   .layout .pager-block { grid-column: 1 / -1; margin-top: 16px; }
 }
+*/
 
 /* ——— Меню прячется (≤960px) ——— */
 @media (max-width: 960px) {

@@ -84,7 +84,7 @@ async function go(url, push) {
     $('link[rel="canonical"]').href = $('link[rel="canonical"]', doc).href;
     if (push) history.pushState({}, '', url);
     applyQuality(); // учитываем режим молнии у новых карточек
-    watchPhs(feed);
+    watchPhs(); // и карточки ленты, и баннер справа
     initPager();
   } catch {
     location.href = url; // что-то пошло не так: обычный переход

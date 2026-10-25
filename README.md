@@ -22,7 +22,8 @@ src/
   content/news/*.mdx     новости (текст + поля вверху файла)
   content/tags/*.json    теги
   content.config.ts      схема контента (те же поля, что в админке)
-  data/site.ts           название, описание, почта, разделы меню, итоги недели, флаг indexable
+  content/site, home, about  настройки сайта, главная и «О проекте» (правятся в админке)
+  data/site.ts           читает настройки; разделы меню, итоги недели, флаг indexable
   assets/news/           картинки новостей (оригиналы; нужные размеры и форматы Astro делает сам)
   assets/fonts/          Roboto Flex (кириллица и латиница, woff2)
   layouts/               Base (каркас), FeedPage (главная и архив), ListPage (теги и разделы)

@@ -11,7 +11,7 @@ export const organization = () => ({
   url: absUrl(),
   logo: { '@type': 'ImageObject', url: absUrl('favicon.svg') },
   email: SITE.email,
-  // sameAs: ссылки на официальные соцсети — добавить, когда появятся реальные адреса
+  ...(Object.values(SITE.socials).some(Boolean) ? { sameAs: Object.values(SITE.socials).filter(Boolean) } : {}), // соцсети из админки
 });
 
 export const website = () => ({

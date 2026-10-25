@@ -1,5 +1,7 @@
 ---
-// О проекте: /about/
+// О проекте: /about/. Текст, лид и «Коротко» правятся в админке («О проекте», src/content/about/index.mdx).
+// Ссылки в боковом меню ведут на заголовки «Контакты», «Реклама», «Предложить новость»: не переименовывайте их.
+import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ArticleShell from '../components/ArticleShell.astro';
 import SummaryBox from '../components/SummaryBox.astro';
@@ -9,51 +11,26 @@ import { promo as getPromo } from '../lib/news';
 import { route, absUrl } from '../lib/url';
 import { graph, organization, breadcrumbs } from '../lib/seo';
 
+const entry = (await getEntry('about', 'index'))!;
+const { Content } = await render(entry);
+const { title, lead, summary } = entry.data;
 const promo = await getPromo();
 const crumbs = [{ name: 'главная', path: '' }, { name: 'о проекте' }];
-const lead = `${SITE.name} — независимое издание о технологиях, играх, кино и автомобилях. Пишем коротко, проверяем факты и всегда указываем источники.`;
 const about = {
   '@type': 'AboutPage',
   '@id': `${absUrl(route.about)}#about`,
   url: absUrl(route.about),
-  name: `О проекте ${SITE.name}`,
+  name: title,
   description: lead,
   inLanguage: SITE.lang,
   about: { '@id': `${absUrl()}#org` },
 };
 ---
 
-<Base title={`О проекте — ${SITE.name}`} description={lead} layoutClass="layout--article" section="novosti" jsonLd={[graph(organization(), about, breadcrumbs(crumbs))]}>
-  <ArticleShell crumbs={crumbs} h1={`О проекте ${SITE.name}`} lead={lead}>
-    <SummaryBox slot="summary" items={['Независимое издание о технологиях, играх, кино и авто', 'Факты проверяем, источники указываем', 'Реклама всегда с пометкой']} />
-
-    <h2 id="what">Чем мы занимаемся</h2>
-    <p>Мы рассказываем о новинках техники, играх, кино и автомобилях простыми словами: что случилось, почему это важно и что делать читателю. Каждый материал начинается с главного — коротким резюме, а подробности идут дальше.</p>
-
-    <h2 id="how">Как мы работаем</h2>
-    <ol>
-      <li>Находим первоисточник: заявление компании, документ, исследование или собственный тест.</li>
-      <li>Проверяем цифры и даты, сверяем с несколькими источниками.</li>
-      <li>Пишем коротко и ссылаемся на источник в самом тексте.</li>
-      <li>Если появляются новые данные, обновляем материал и указываем время изменения.</li>
-    </ol>
-
-    <h2 id="principles">Редакционные принципы</h2>
-    <ul>
-      <li>Отделяем факты от мнений: мнение редакции всегда обозначено.</li>
-      <li>Рекламу и партнёрские материалы помечаем.</li>
-      <li>Ошибки исправляем открыто и сообщаем об исправлении в материале.</li>
-      <li>Не принимаем деньги за положительные обзоры.</li>
-    </ul>
-
-    <h2 id="contacts">Контакты</h2>
-    <p>Редакция: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. Мы отвечаем на письма в рабочие дни.</p>
-
-    <h2 id="advertising">Реклама</h2>
-    <p>По вопросам размещения пишите на <a href={`mailto:${SITE.email}`}>{SITE.email}</a> с темой «Реклама». Все рекламные материалы публикуются с пометкой.</p>
-
-    <h2 id="suggest">Предложить новость</h2>
-    <p>Есть тема, которую стоит разобрать, или вы заметили ошибку? Напишите на <a href={`mailto:${SITE.email}`}>{SITE.email}</a> — мы проверим и ответим.</p>
+<Base title={`${title} — ${SITE.name}`} description={lead} layoutClass="layout--article" section="novosti" jsonLd={[graph(organization(), about, breadcrumbs(crumbs))]}>
+  <ArticleShell crumbs={crumbs} h1={title} lead={lead}>
+    <SummaryBox slot="summary" items={summary} />
+    <Content />
   </ArticleShell>
 
   <aside class="aside" aria-label="Подборка">

@@ -2,6 +2,7 @@
 
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SECTIONS, PER_PAGE } from '../data/site';
+import home from '../content/home/index.json';
 
 export type News = CollectionEntry<'news'>;
 
@@ -13,7 +14,12 @@ export async function allNews(): Promise<News[]> {
 
 export const feedOf = (items: News[]) => items.filter(n => !n.data.promo);
 
-export async function feed() { return feedOf(await allNews()); }
+// Лента: закреплённая новость (если выбрана в админке на «Главной») идёт первой, остальные по дате
+export async function feed() {
+  const items = feedOf(await allNews());
+  const i = home.pinned ? items.findIndex(n => n.id === home.pinned) : -1;
+  return i > 0 ? [items[i], ...items.slice(0, i), ...items.slice(i + 1)] : items;
+}
 export async function promo() { return (await allNews()).find(n => n.data.promo)!; }
 export const totalPages = (feedItems: News[]) => Math.ceil(feedItems.length / PER_PAGE);
 

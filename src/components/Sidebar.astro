@@ -1,10 +1,12 @@
 ---
 import * as i from '../lib/icons';
-import { SECTIONS } from '../data/site';
+import { SECTIONS, SITE } from '../data/site';
 import { href, route } from '../lib/url';
 
 interface Props { active?: string }
 const { active } = Astro.props;
+// пока адрес соцсети не заполнен в админке, ссылка-заглушка; настоящие открываем в новой вкладке
+const ext = (url: string) => (url ? { target: '_blank', rel: 'noopener me' } : {});
 ---
 
 <aside class="sidebar" id="sidebar" aria-label="Разделы сайта">
@@ -12,15 +14,15 @@ const { active } = Astro.props;
     {SECTIONS.map(s => <a href={href(route.section(s.slug))} aria-current={s.slug === active ? 'page' : undefined}>{s.name}</a>)}
   </nav>
   <nav class="links" aria-label="О сайте">
-    <a href={href(route.about + '#contacts')}>контакты</a>
-    <a href={href(route.about + '#advertising')}>реклама</a>
+    <a href={href(route.about + '#контакты')}>контакты</a>
+    <a href={href(route.about + '#реклама')}>реклама</a>
     <a href={href(route.about)}>о проекте</a>
-    <a href={href(route.about + '#suggest')}>предложить новость</a>
+    <a href={href(route.about + '#предложить-новость')}>предложить новость</a>
   </nav>
   <nav class="socials" aria-label="Соцсети">
-    <a href="#"><Fragment set:html={i.telegram} />telegram</a>
-    <a href="#"><Fragment set:html={i.youtube} />youtube</a>
-    <a href="#"><Fragment set:html={i.instagram} />instagram</a>
-    <a href="#"><Fragment set:html={i.tiktok} />tiktok</a>
+    <a href={SITE.socials.telegram || '#'} {...ext(SITE.socials.telegram)}><Fragment set:html={i.telegram} />telegram</a>
+    <a href={SITE.socials.youtube || '#'} {...ext(SITE.socials.youtube)}><Fragment set:html={i.youtube} />youtube</a>
+    <a href={SITE.socials.instagram || '#'} {...ext(SITE.socials.instagram)}><Fragment set:html={i.instagram} />instagram</a>
+    <a href={SITE.socials.tiktok || '#'} {...ext(SITE.socials.tiktok)}><Fragment set:html={i.tiktok} />tiktok</a>
   </nav>
 </aside>

@@ -26,7 +26,10 @@ const { entry } = Astro.props;
 const d = entry.data;
 
 const all = await allNews();
-const promo = await getPromo();
+const defaultPromo = await getPromo();
+// свой баннер статьи; если не выбран, выбран сам материал или он снят с публикации, показываем баннер по умолчанию
+const picked = d.banner ? all.find(n => n.id === d.banner!.id && n.id !== entry.id) : undefined;
+const promo = picked ?? defaultPromo;
 const { Content } = await render(entry);
 const tags = (await getEntries(d.tags)).map(t => ({ id: t.id, name: t.data.name }));
 const rel = related(all, entry);

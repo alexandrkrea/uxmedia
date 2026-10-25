@@ -1,14 +1,24 @@
 // Настройки сайта. Адрес и база берутся из astro.config.mjs (site, base).
+// Значения правятся в админке («Настройки сайта») и лежат в src/content/site/index.json
+import site from '../content/site/index.json';
+
+const social = (url: string) => (url || '').trim();
 
 export const SITE = {
-  name: 'UXM.BY',
+  name: site.name,
   lang: 'ru',
   locale: 'ru_RU',
-  title: 'UXM.BY — новости технологий, игр, кино и авто',
-  description:
-    'Свежие новости, обзоры и лайфхаки о технологиях, играх, кино и автомобилях. Разбираем главное простыми словами и без лишней воды.',
-  email: 'hello@uxm.by',
-  author: { name: 'Редакция UXM.BY', path: 'about/' },
+  title: site.title,
+  description: site.description,
+  email: site.email,
+  author: { name: site.authorName, path: 'about/' },
+  footerText: site.footerText,
+  socials: {
+    telegram: social(site.telegram),
+    youtube: social(site.youtube),
+    instagram: social(site.instagram),
+    tiktok: social(site.tiktok),
+  },
   // Пока сайт собирается, он закрыт от индексации: noindex на страницах и Disallow в robots.txt.
   // Перед запуском соберите с INDEXABLE=true (переменная окружения).
   indexable: process.env.INDEXABLE === 'true',

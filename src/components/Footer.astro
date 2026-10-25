@@ -8,7 +8,7 @@ import { SITE } from '../data/site';
   <button class="to-top" id="to-top" type="button" aria-label="Наверх"><Fragment set:html={i.arrowUp} /></button>
   <div class="footer__row">
     <div class="footer__text">
-      <p>Все права защищены. Любое использование либо копирование материалов и (или) подборки материалов сайта, элементов дизайна и оформления допускается лишь с письменного разрешения правообладателя и только со ссылкой на источник.</p>
+      <p>{SITE.footerText}</p>
       <small>© {new Date().getFullYear()} {SITE.name}</small>
     </div>
     <button class="cookie" type="button">Настройки файлов cookie</button>

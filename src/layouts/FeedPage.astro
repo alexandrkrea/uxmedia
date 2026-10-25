@@ -6,6 +6,7 @@ import Card from '../components/Card.astro';
 import Pager from '../components/Pager.astro';
 import Crumbs from '../components/Crumbs.astro';
 import { SITE, PER_PAGE } from '../data/site';
+import home from '../content/home/index.json';
 import { feed, promo as getPromo, totalPages } from '../lib/news';
 import { route, absUrl } from '../lib/url';
 import { graph, website, organization, breadcrumbs } from '../lib/seo';
@@ -36,9 +37,8 @@ const description = page === 1 ? SITE.description : `Архив новостей
   <aside class="aside" aria-label="О сайте">
     {page === 1 ? (
       <section class="intro">
-        <h1>{SITE.title}</h1>
-        <p>{SITE.description}</p>
-        <p>Тестируем гаджеты, следим за релизами и рассказываем, что стоит вашего внимания, а что можно спокойно пропустить. Каждый день — только то, что действительно важно.</p>
+        <h1>{home.heading}</h1>
+        {home.intro.split(/\n\s*\n/).map(p => <p>{p.trim()}</p>)}
       </section>
     ) : (
       <section class="intro">

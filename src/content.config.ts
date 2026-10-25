@@ -24,9 +24,20 @@ const news = defineCollection({
       tags: z.array(reference('tags')).default([]),
       image: image(),
       summary: z.array(z.string()).min(1).max(5),
-      promo: z.boolean().default(false), // карточка в правой колонке, в ленту не попадает
+      promo: z.boolean().default(false), // баннер по умолчанию (правая колонка), в ленту не попадает
+      banner: reference('news').nullish(), // свой баннер у этой статьи; пусто: показывается баннер по умолчанию
       draft: z.boolean().default(false), // черновик: на сайт не попадает
     }),
 });
 
-export const collections = { news, tags };
+// «О проекте»: одна страница (src/content/about/index.mdx), правится в админке
+const about = defineCollection({
+  loader: glob({ pattern: 'index.mdx', base: './src/content/about' }),
+  schema: z.object({
+    title: z.string(),
+    lead: z.string(),
+    summary: z.array(z.string()).min(1).max(5),
+  }),
+});
+
+export const collections = { news, tags, about };

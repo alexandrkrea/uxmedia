@@ -15,6 +15,7 @@ import Quote from '../../components/mdx/Quote.astro';
 import Checks from '../../components/mdx/Checks.astro';
 import { SITE } from '../../data/site';
 import { allNews, promo as getPromo, related, autoBanner, sectionSlug } from '../../lib/news';
+import Banners from '../../components/Banners.astro';
 import { href, route, absUrl } from '../../lib/url';
 import { dateLabel, iso, readingMinutes } from '../../lib/format';
 import { graph, organization, breadcrumbs, authorOrg, publisherRef } from '../../lib/seo';
@@ -33,8 +34,8 @@ const rel = related(all, entry);
 // баннер справа: выбранный вручную, иначе самый подходящий автоматически, иначе баннер по умолчанию
 const picked = d.banner ? all.find(n => n.id === d.banner!.id && n.id !== entry.id) : undefined;
 const shown = rel.map(r => r.id);
-const defaultFits = defaultPromo.id !== entry.id && !shown.includes(defaultPromo.id);
-const promo = picked ?? autoBanner(all, entry, shown) ?? (defaultFits ? defaultPromo : undefined) ?? all.find(n => n.id !== entry.id && !shown.includes(n.id))!;
+const defaultFits = !!defaultPromo && defaultPromo.id !== entry.id && !shown.includes(defaultPromo.id);
+const promo = picked ?? autoBanner(all, entry, shown) ?? (defaultFits ? defaultPromo : undefined) ?? all.find(n => n.id !== entry.id && !shown.includes(n.id));
 const hasGallery = (entry.body ?? '').includes('<Gallery');
 const minutes = readingMinutes(entry.body ?? '');
 
@@ -102,13 +103,13 @@ const ogMeta = {
     {rel.length > 0 && (
       <section slot="after" class="related-wrap" aria-label="Читайте также">
         <h2 class="related-title">Читайте также</h2>
-        <div class="related">{rel.map(m => <Card news={m} kind="light" />)}</div>
+        <div class="related">{rel.map(m => <Card news={m} kind="wide" />)}</div>
       </section>
     )}
   </ArticleShell>
 
   <aside class="aside" aria-label="Подборка">
-    <Card news={promo} kind="tall" />
+    <Banners items={promo ? [promo] : []} />
   </aside>
 
   {hasGallery && <Lightbox slot="after" />}

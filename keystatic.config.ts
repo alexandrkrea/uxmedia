@@ -40,6 +40,16 @@ export default config({
           multiline: true,
           validation: { isRequired: true },
         }),
+        showBanner: fields.checkbox({
+          label: 'Показывать баннер справа',
+          description: 'Снимите галочку, чтобы убрать баннеры справа на главной, в архиве, в «О проекте» и в итогах недели. У статей свои баннеры, их это не касается.',
+          defaultValue: true,
+        }),
+        banners: fields.multiRelationship({
+          label: 'Баннеры справа',
+          description: 'Какие новости показывать (можно несколько, они идут друг под другом). Если пусто, показывается новость с галочкой «Баннер по умолчанию». Показанная баннером новость в ленту не попадает.',
+          collection: 'news',
+        }),
         pinned: fields.relationship({
           label: 'Закреплённая новость',
           description: 'Эта новость всегда первая в ленте. Если пусто, лента идёт по дате: свежие сверху.',

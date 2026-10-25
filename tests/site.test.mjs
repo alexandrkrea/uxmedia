@@ -100,7 +100,8 @@ test('в sitemap только существующие страницы', async 
 
 test('robots.txt, rss.xml, llms.txt и данные поиска на месте', async () => {
   for (const f of ['robots.txt', 'rss.xml', 'llms.txt', 'search-data.json']) assert.ok(await exists(join(DIST, f)), f);
-  assert.match(await readFile(join(DIST, 'llms.txt'), 'utf8'), /^# UXM\.BY/);
+  const { name } = JSON.parse(await readFile(join(DIST, '..', 'src', 'content', 'site', 'index.json'), 'utf8')); // название правится в админке
+  assert.ok((await readFile(join(DIST, 'llms.txt'), 'utf8')).startsWith(`# ${name}`));
   const data = JSON.parse(await readFile(join(DIST, 'search-data.json'), 'utf8'));
   assert.ok(data.news.length >= 10 && data.sections.length === 8);
 });

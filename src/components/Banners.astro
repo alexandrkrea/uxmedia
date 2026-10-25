@@ -1,0 +1,10 @@
+---
+// Узкие карточки-баннеры в правой колонке; список приходит от страницы (homeBanners() или баннер статьи)
+import Card from './Card.astro';
+import type { News } from '../lib/news';
+
+interface Props { items: News[] }
+const { items } = Astro.props;
+---
+
+{items.map(n => <Card news={n} kind="tall" />)}

@@ -5,16 +5,16 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ArticleShell from '../components/ArticleShell.astro';
 import SummaryBox from '../components/SummaryBox.astro';
-import Card from '../components/Card.astro';
+import Banners from '../components/Banners.astro';
 import { SITE } from '../data/site';
-import { promo as getPromo } from '../lib/news';
+import { homeBanners } from '../lib/news';
 import { route, absUrl } from '../lib/url';
 import { graph, organization, breadcrumbs } from '../lib/seo';
 
 const entry = (await getEntry('about', 'index'))!;
 const { Content } = await render(entry);
 const { title, lead, summary } = entry.data;
-const promo = await getPromo();
+const banners = await homeBanners();
 const crumbs = [{ name: 'главная', path: '' }, { name: 'о проекте' }];
 const about = {
   '@type': 'AboutPage',
@@ -34,6 +34,6 @@ const about = {
   </ArticleShell>
 
   <aside class="aside" aria-label="Подборка">
-    <Card news={promo} kind="tall" />
+    <Banners items={banners} />
   </aside>
 </Base>

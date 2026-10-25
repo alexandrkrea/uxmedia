@@ -12,15 +12,27 @@ export async function allNews(): Promise<News[]> {
   return items.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 
-export const feedOf = (items: News[]) => items.filter(n => !n.data.promo);
+export const promoNews = (items: News[]) => items.find(n => n.data.promo);
 
-// Лента: закреплённая новость (если выбрана в админке на «Главной») идёт первой, остальные по дате
+// Баннеры справа на главной и страницах без статьи (настраиваются на «Главной» в админке):
+// выбранные новости (можно несколько), если не выбраны, то новость с галочкой «Баннер по умолчанию»; можно отключить совсем
+export async function homeBanners(): Promise<News[]> {
+  if (home.showBanner === false) return [];
+  const items = await allNews();
+  const picked = (home.banners ?? []).map(id => items.find(n => n.id === id)).filter((n): n is News => !!n);
+  if (picked.length) return picked;
+  const fallback = promoNews(items);
+  return fallback ? [fallback] : [];
+}
+
+// Лента: без новостей, которые показаны баннером; закреплённая (если выбрана на «Главной») идёт первой, остальные по дате
 export async function feed() {
-  const items = feedOf(await allNews());
+  const banners = (await homeBanners()).map(n => n.id);
+  const items = (await allNews()).filter(n => !banners.includes(n.id));
   const i = home.pinned ? items.findIndex(n => n.id === home.pinned) : -1;
   return i > 0 ? [items[i], ...items.slice(0, i), ...items.slice(i + 1)] : items;
 }
-export async function promo() { return (await allNews()).find(n => n.data.promo)!; }
+export async function promo() { return promoNews(await allNews()); } // может не быть: баннер по умолчанию не обязателен
 export const totalPages = (feedItems: News[]) => Math.ceil(feedItems.length / PER_PAGE);
 
 export async function allTags() { return getCollection('tags'); }

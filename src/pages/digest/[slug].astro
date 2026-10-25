@@ -3,10 +3,10 @@
 import Base from '../../layouts/Base.astro';
 import ArticleShell from '../../components/ArticleShell.astro';
 import SummaryBox from '../../components/SummaryBox.astro';
-import Card from '../../components/Card.astro';
+import Banners from '../../components/Banners.astro';
 import Quote from '../../components/mdx/Quote.astro';
 import { SITE, DIGESTS } from '../../data/site';
-import { allNews, promo as getPromo } from '../../lib/news';
+import { allNews, homeBanners } from '../../lib/news';
 import { href, route, absUrl } from '../../lib/url';
 import { rangeLabel, dateLabel, dateLong, iso, plural, readingMinutes } from '../../lib/format';
 import { graph, organization, breadcrumbs, authorOrg, publisherRef } from '../../lib/seo';
@@ -17,7 +17,7 @@ export function getStaticPaths() {
 const { digest } = Astro.props;
 
 const all = await allNews();
-const promo = await getPromo();
+const banners = await homeBanners();
 const items = all.filter(n => n.data.date >= digest.from && n.data.date <= digest.to);
 const week = rangeLabel(digest.from, digest.to);
 const top = ['tesla-roadster-kikflip', 'obzor-samsung-odyssey-oled-g8', '1password-dlya-ii-agentov']
@@ -90,6 +90,6 @@ const articleLd = {
   </ArticleShell>
 
   <aside class="aside" aria-label="Подборка">
-    <Card news={promo} kind="tall" />
+    <Banners items={banners} />
   </aside>
 </Base>

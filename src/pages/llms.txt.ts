@@ -1,11 +1,11 @@
 import type { APIContext } from 'astro';
 import { SITE, SECTIONS, DIGESTS } from '../data/site';
-import { feed } from '../lib/news';
+import { allNews } from '../lib/news';
 import { route, absUrl } from '../lib/url';
 
 // Описание сайта для нейросетей (формат llms.txt)
 export async function GET(_: APIContext) {
-  const items = (await feed()).slice(0, 10);
+  const items = (await allNews()).slice(0, 10);
   const body = `# ${SITE.name}
 
 > ${SITE.description}

@@ -101,6 +101,7 @@
 }
 
 .related { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.related .card--wide { min-height: 440px; } /* фото на всю карточку, как в ленте, но ниже */
 .related-wrap { display: flex; flex-direction: column; gap: 16px; }
 .related-title { font-size: 20px; font-weight: 600; line-height: 1.2; }
 

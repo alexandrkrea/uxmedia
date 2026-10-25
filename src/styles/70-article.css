@@ -25,12 +25,12 @@
 .byline a { color: var(--text-2); text-decoration: underline; text-underline-position: from-font; }
 
 /* ——— Блок «Коротко и по делу» (ответ под обложкой: удобно людям и нейросетям) ——— */
-.article__summary { margin: var(--flow-block) var(--article-pad) 0; }
+.article__summary { margin: 40px var(--article-pad) 0; }
 .summary h2 { font-size: 13px; font-weight: 500; line-height: 1.6; color: var(--muted); text-transform: lowercase; }
 .summary ul { margin-top: 8px; }
-.summary li { display: flex; gap: 16px; align-items: flex-start; font-size: 18px; line-height: 1.5; color: var(--text); }
+.summary li { position: relative; padding-left: 40px; font-size: 18px; line-height: 1.5; color: var(--text); }
 .summary li + li { margin-top: 8px; }
-.summary li::before { content: ""; flex: none; width: 24px; height: 24px; background: var(--text-2); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat; }
+.summary li::before { content: ""; position: absolute; left: 0; top: calc((1.5em - 24px) / 2); width: 24px; height: 24px; background: var(--text-2); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat; }
 
 /* ——— Медиа в статье ——— */
 .article__media { margin-top: var(--flow-block); }
@@ -38,7 +38,7 @@
 .article__media--hero .ph { aspect-ratio: 900 / 506; }
 
 /* ——— Текст: единая шкала отступов (--flow*), боковые поля у всего, кроме «bleed» (картинки и галерея на всю ширину) ——— */
-.article__body { margin-top: var(--flow-section); }
+.article__body { margin-top: 40px; } /* как между текстовыми секциями */
 .article__body > * { margin-inline: var(--article-pad); }
 .article__body > .bleed { margin-inline: 0; }
 
@@ -47,7 +47,7 @@
 .prose > .caption + * { margin-top: var(--flow-block); }
 .prose > * + .checks { margin-top: var(--flow-section); }
 .prose > * + :is(ol, ul) { margin-top: var(--flow-head); }
-.prose > * + h2 { margin-top: var(--flow-section); }
+.prose > * + h2 { margin-top: 40px; } /* между текстовыми секциями: одинаково на всех экранах */
 .prose > * + h3 { margin-top: var(--flow-block); }
 .prose > * + .article__media { margin-top: var(--flow-block); }
 .prose > * + .gallery { margin-top: var(--flow-section); }
@@ -64,14 +64,14 @@
 /* списки: маркеры, нумерация и галочки */
 .prose li + li { margin-top: var(--flow); }
 .prose ol { counter-reset: step; }
-.prose ol > li { display: flex; gap: 16px; counter-increment: step; }
-.prose ol > li::before { content: counter(step) "."; flex: none; }
+.prose ol > li { position: relative; padding-left: 40px; counter-increment: step; }
+.prose ol > li::before { content: counter(step) "."; position: absolute; left: 0; }
 .prose ul.digest-list { padding-left: 0; list-style: none; }
 .prose ul.digest-list li + li { margin-top: 16px; }
 .prose ul:not(.digest-list), .checks ul { padding-left: 0; list-style: none; } /* точечных списков нет: у всех маркированных списков галочки */
-.prose ul:not(.digest-list) li, .checks li { display: flex; gap: 16px; align-items: flex-start; }
+.prose ul:not(.digest-list) li, .checks li { position: relative; padding-left: 40px; }
 .prose ul:not(.digest-list) li::before, .checks li::before {
-  content: ""; flex: none; width: 24px; height: 24px; background: var(--text-2);
+  content: ""; position: absolute; left: 0; top: calc((1.5em - 24px) / 2); width: 24px; height: 24px; background: var(--text-2);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat;
 }

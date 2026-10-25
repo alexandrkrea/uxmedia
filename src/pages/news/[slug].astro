@@ -14,7 +14,7 @@ import Figure from '../../components/mdx/Figure.astro';
 import Quote from '../../components/mdx/Quote.astro';
 import Checks from '../../components/mdx/Checks.astro';
 import { SITE } from '../../data/site';
-import { allNews, promo as getPromo, related, sectionSlug } from '../../lib/news';
+import { allNews, promo as getPromo, related, autoBanner, sectionSlug } from '../../lib/news';
 import { href, route, absUrl } from '../../lib/url';
 import { dateLabel, iso, readingMinutes } from '../../lib/format';
 import { graph, organization, breadcrumbs, authorOrg, publisherRef } from '../../lib/seo';
@@ -27,12 +27,14 @@ const d = entry.data;
 
 const all = await allNews();
 const defaultPromo = await getPromo();
-// свой баннер статьи; если не выбран, выбран сам материал или он снят с публикации, показываем баннер по умолчанию
-const picked = d.banner ? all.find(n => n.id === d.banner!.id && n.id !== entry.id) : undefined;
-const promo = picked ?? defaultPromo;
 const { Content } = await render(entry);
 const tags = (await getEntries(d.tags)).map(t => ({ id: t.id, name: t.data.name }));
 const rel = related(all, entry);
+// баннер справа: выбранный вручную, иначе самый подходящий автоматически, иначе баннер по умолчанию
+const picked = d.banner ? all.find(n => n.id === d.banner!.id && n.id !== entry.id) : undefined;
+const shown = rel.map(r => r.id);
+const defaultFits = defaultPromo.id !== entry.id && !shown.includes(defaultPromo.id);
+const promo = picked ?? autoBanner(all, entry, shown) ?? (defaultFits ? defaultPromo : undefined) ?? all.find(n => n.id !== entry.id && !shown.includes(n.id))!;
 const hasGallery = (entry.body ?? '').includes('<Gallery');
 const minutes = readingMinutes(entry.body ?? '');
 

@@ -29,6 +29,18 @@ export const byTag = (items: News[], tag: string) => items.filter(n => n.data.ta
 export const bySection = (items: News[], name: string) => items.filter(n => n.data.section === name);
 export const sectionSlug = (name: string) => (SECTIONS.find(s => s.name === name) ?? SECTIONS[0]).slug;
 
+// Баннер справа, когда у статьи он не выбран вручную: самая подходящая новость.
+// Очки: общие теги (по 3) и тот же раздел (2), при равенстве свежая выше. Саму статью и уже показанные
+// на странице материалы («Читайте также») не берём. Если подходящих нет, остаётся баннер по умолчанию.
+export function autoBanner(items: News[], n: News, exclude: string[] = []): News | undefined {
+  const mine = n.data.tags.map(t => t.id);
+  return items
+    .filter(m => m.id !== n.id && !exclude.includes(m.id))
+    .map(m => ({ m, score: m.data.tags.filter(t => mine.includes(t.id)).length * 3 + (m.data.section === n.data.section ? 2 : 0) }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score || b.m.data.date.getTime() - a.m.data.date.getTime())[0]?.m;
+}
+
 // Похожие материалы: по числу общих тегов, затем по дате
 export function related(items: News[], n: News, limit = 2): News[] {
   const mine = n.data.tags.map(t => t.id);

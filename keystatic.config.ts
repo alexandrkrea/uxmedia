@@ -59,7 +59,7 @@ export default config({
         draft: fields.checkbox({ label: 'Черновик', description: 'Не показывается на сайте.' }),
         content: fields.mdx({
           label: 'Текст',
-          options: { image: { directory: 'src/assets/news', publicPath: '../../assets/news/' } },
+          options: { heading: [2], image: { directory: 'src/assets/news', publicPath: '../../assets/news/' } },
           components: {
             Gallery: block({
               label: 'Галерея',

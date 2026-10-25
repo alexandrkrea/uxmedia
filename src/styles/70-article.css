@@ -3,7 +3,8 @@
    ========================================================================== */
 
 .article-col { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
-.layout--article .aside { display: none; } /* баннер справа показываем там, где для него есть место (от 1600px, см. 10-layout.css) */
+/* баннер справа показываем там, где для него есть место (от 1600px, см. 10-layout.css) */
+@media (max-width: 1599px) { .layout--article .aside { display: none; } }
 
 .article { --article-pad: 86px; padding: 86px 0 80px; border-radius: 32px; background: var(--surface); }
 .article__inner { padding: 0 var(--article-pad); }
@@ -45,7 +46,9 @@
 .prose > :is(h2, h3) + * { margin-top: var(--flow-head); }
 .prose > .caption + * { margin-top: var(--flow-block); }
 .prose > * + .checks { margin-top: var(--flow-section); }
-.prose > * + :is(ol) { margin-top: var(--flow-head); }
+.prose > * + :is(ol, ul) { margin-top: var(--flow-head); }
+.prose > * + h2 { margin-top: var(--flow-section); }
+.prose > * + h3 { margin-top: var(--flow-block); }
 .prose > * + .article__media { margin-top: var(--flow-block); }
 .prose > * + .gallery { margin-top: var(--flow-section); }
 .prose > .gallery + * { margin-top: 40px; }
@@ -59,17 +62,15 @@
 .prose strong { font-weight: 600; color: var(--text); }
 
 /* списки: маркеры, нумерация и галочки */
-.prose ul { padding-left: 22px; list-style: disc; }
-.prose ul li::marker { color: var(--muted); }
 .prose li + li { margin-top: var(--flow); }
 .prose ol { counter-reset: step; }
 .prose ol > li { display: flex; gap: 16px; counter-increment: step; }
 .prose ol > li::before { content: counter(step) "."; flex: none; }
 .prose ul.digest-list { padding-left: 0; list-style: none; }
 .prose ul.digest-list li + li { margin-top: 16px; }
-.checks ul { padding-left: 0; list-style: none; }
-.checks li { display: flex; gap: 16px; align-items: flex-start; }
-.checks li::before {
+.prose ul:not(.digest-list), .checks ul { padding-left: 0; list-style: none; } /* точечных списков нет: у всех маркированных списков галочки */
+.prose ul:not(.digest-list) li, .checks li { display: flex; gap: 16px; align-items: flex-start; }
+.prose ul:not(.digest-list) li::before, .checks li::before {
   content: ""; flex: none; width: 24px; height: 24px; background: var(--text-2);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat;

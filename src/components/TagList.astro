@@ -1,10 +1,14 @@
 ---
 import { href, route } from '../lib/url';
+import { dateLabel, iso } from '../lib/format';
 
-interface Props { tags: { id: string; name: string }[] }
-const { tags } = Astro.props;
+interface Props { tags: { id: string; name: string }[]; updated?: Date }
+const { tags, updated } = Astro.props;
 ---
 
 <div class="tag-list">
-  {tags.map(t => <a class="tag" href={href(route.tag(t.id))}>{t.name}</a>)}
+  <div class="tag-list__tags">
+    {tags.map(t => <a class="tag" href={href(route.tag(t.id))}>{t.name}</a>)}
+  </div>
+  {updated && <p class="tag-list__updated">Обновлено: <time datetime={iso(updated)}>{dateLabel(updated)}</time></p>}
 </div>

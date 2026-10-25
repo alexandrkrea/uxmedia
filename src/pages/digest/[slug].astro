@@ -25,7 +25,7 @@ const top = ['tesla-roadster-kikflip', 'obzor-samsung-odyssey-oled-g8', '1passwo
 const articleUrl = (id: string) => href(route.article(id));
 const count = `${items.length} ${plural(items.length, 'материал', 'материала', 'материалов')}`;
 const lead = `За неделю ${week} мы опубликовали ${count}. Главные темы: Tesla Roadster, OLED-монитор Samsung и защита доступа для ИИ-агентов.`;
-const crumbs = [{ name: 'главная', path: '' }, { name: 'итоги недели' }, { name: week }];
+const crumbs = [{ name: 'главная', path: '' }, { name: week }];
 const published = new Date(digest.to.getTime() - 6 * 3600 * 1000); // воскресенье вечером
 const minutes = readingMinutes(items.map(n => n.data.lead).join(' ') + lead);
 const path = route.digest(digest.slug);
@@ -54,9 +54,11 @@ const articleLd = {
 >
   <ArticleShell crumbs={crumbs} h1={`Итоги недели ${week}`} lead={lead}>
     <p slot="byline" class="byline">
-      <span>Автор: <a href={href(SITE.author.path)}>{SITE.author.name}</a></span>
-      <span>Опубликовано: <time datetime={iso(published)}>{dateLong(published)}</time></span>
-      <span>{minutes} мин чтения</span>
+      <span class="byline__info">
+        <time datetime={iso(published)}>{dateLong(published)}</time>
+        <span>{minutes} мин чтения</span>
+      </span>
+      <span class="byline__author">Автор: <a href={href(SITE.author.path)}>{SITE.author.name}</a></span>
     </p>
     <SummaryBox
       slot="summary"

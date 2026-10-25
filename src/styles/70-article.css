@@ -12,28 +12,24 @@
 .crumbs { margin-bottom: 16px; font-size: 13px; line-height: 1.6; color: var(--muted); }
 .crumbs ol { display: flex; flex-wrap: wrap; gap: 4px 8px; }
 .crumbs li + li::before { content: "/"; margin-right: 8px; color: var(--disabled); }
-.crumbs [aria-current] { color: var(--text-2); }
 @media (hover: hover) { .crumbs a:hover { color: var(--icon-hover); text-decoration: underline; text-underline-position: from-font; } }
 
 /* ——— Строка с тегами и датой ——— */
-.article__meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 32px; font-size: 13px; line-height: 1.6; color: var(--muted); }
-.article__meta time { white-space: nowrap; }
-.tags { display: flex; flex-wrap: wrap; gap: 4px 16px; }
-@media (hover: hover) { .tags a:hover { color: var(--icon-hover); text-decoration: underline; text-underline-position: from-font; } }
 
 /* ——— Заголовок, лид, подпись автора ——— */
 .article__head h1 { font-weight: 600; font-size: 32px; line-height: 1; letter-spacing: -1px; color: var(--text); }
 .article__lead { margin-top: 16px; font-size: 16px; line-height: 1.5; color: var(--text-2); }
-.byline { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 16px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.byline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin: 16px 0 32px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.byline__info { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 .byline a { color: var(--text-2); text-decoration: underline; text-underline-position: from-font; }
 
 /* ——— Блок «Коротко» (ответ в начале: удобно людям и нейросетям) ——— */
-.summary { margin-top: 32px; padding: 24px 32px; border-radius: 24px; background: var(--bg); }
+.summary { margin-top: 32px; padding: 24px 32px; border-radius: 16px; background: var(--bg); }
 .summary h2 { font-size: 13px; font-weight: 500; line-height: 1.6; color: var(--muted); text-transform: lowercase; }
 .summary ul { margin-top: 8px; }
-.summary li { display: flex; gap: 12px; font-size: 16px; line-height: 1.5; color: var(--text); }
+.summary li { display: flex; gap: 16px; align-items: flex-start; font-size: 18px; line-height: 1.5; color: var(--text); }
 .summary li + li { margin-top: 8px; }
-.summary li::before { content: "—"; flex: none; color: var(--muted); }
+.summary li::before { content: ""; flex: none; width: 24px; height: 24px; background: var(--text-2); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E") center / contain no-repeat; }
 
 /* ——— Медиа в статье ——— */
 .article__media { margin-top: var(--flow-block); }
@@ -90,12 +86,14 @@
 
 /* ——— Теги внизу статьи ——— */
 .prose > .tag-list { margin-top: var(--flow-section); }
-.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag {
+.tag-list { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.tag-list__tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.prose .tag-list__updated { font-size: 13px; line-height: 1.6; color: var(--muted); white-space: nowrap; }
+.prose .tag {
   display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 64px;
-  background: var(--bg); font-size: 13px; color: var(--text-2); transition: background .2s, color .2s;
+  border: 1px solid var(--bg); font-size: 13px; color: var(--text-2); text-decoration: none; transition: border-color .2s, color .2s;
 }
-@media (hover: hover) { .tag:hover { background: var(--item-hover); color: var(--text); outline: 1px solid var(--disabled); } }
+@media (hover: hover) { .prose .tag:hover { border-color: var(--disabled); color: var(--text); } }
 
 .related { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
 .related-wrap { display: flex; flex-direction: column; gap: 16px; }
@@ -119,6 +117,7 @@
   .article { --article-pad: 24px; }
   .article__head h1 { font-size: 24px; letter-spacing: -.5px; }
   .summary { padding: 20px 24px; }
+  .summary li { font-size: 16px; }
   .prose p, .prose li { font-size: 16px; }
   .prose .quote { font-size: 18px; }
   .prose h2 { font-size: 22px; }

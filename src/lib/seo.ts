@@ -25,18 +25,20 @@ export const website = () => ({
   // SearchAction добавим, когда появится страница поиска по адресу
 });
 
-// Крошки в разметке совпадают с теми, что видны на странице
-export const breadcrumbs = (items: { name: string; path?: string }[]) => ({
-  '@type': 'BreadcrumbList',
-  itemListElement: items.map((c, i) => ({
-    '@type': 'ListItem',
-    position: i + 1,
-    name: c.name,
-    ...(i < items.length - 1 ? { item: absUrl(c.path ?? '') } : {}),
-  })),
-});
+// Крошки в разметке совпадают с теми, что видны на странице: без последнего пункта (текущая страница, её название уже в h1).
+// Меньше двух пунктов — крошек нет, и разметка не нужна.
+export const trail = <T>(items: T[]) => (items.length > 2 ? items.slice(0, -1) : []);
 
-export const graph = (...nodes: object[]) => ({ '@context': 'https://schema.org', '@graph': nodes });
+export const breadcrumbs = (items: { name: string; path?: string }[]) => {
+  const list = trail(items);
+  if (!list.length) return null;
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: list.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: absUrl(c.path ?? '') })),
+  };
+};
+
+export const graph = (...nodes: (object | null)[]) => ({ '@context': 'https://schema.org', '@graph': nodes.filter(Boolean) });
 
 export const authorOrg = () => ({ '@type': 'Organization', name: SITE.author.name, url: absUrl(SITE.author.path) });
 export const publisherRef = () => ({ '@id': orgId() });

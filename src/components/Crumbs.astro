@@ -1,17 +1,17 @@
 ---
-// Хлебные крошки: весь путь. path — адрес относительно корня сайта; у последнего пункта ссылки нет.
+// Хлебные крошки: путь до родителя. Текущую страницу не повторяем: её название и так в заголовке h1.
+// path — адрес относительно корня сайта. Меньше двух пунктов — блок не нужен.
 import { href } from '../lib/url';
+import { trail } from '../lib/seo';
 
 interface Props { items: { name: string; path?: string }[] }
-const { items } = Astro.props;
+const items = trail(Astro.props.items);
 ---
 
-<nav class="crumbs" aria-label="Хлебные крошки">
-  <ol>
-    {items.map((c, i) => (
-      <li>
-        {i === items.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={href(c.path ?? '')}>{c.name}</a>}
-      </li>
-    ))}
-  </ol>
-</nav>
+{items.length > 0 && (
+  <nav class="crumbs" aria-label="Хлебные крошки">
+    <ol>
+      {items.map(c => <li><a href={href(c.path ?? '')}>{c.name}</a></li>)}
+    </ol>
+  </nav>
+)}
